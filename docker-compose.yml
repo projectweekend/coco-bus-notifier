@@ -1,0 +1,6 @@
+version: "2"
+services:
+    bus_notify:
+        build: .
+        volumes:
+            - "./lambda:/src"
