@@ -58,3 +58,7 @@ docs/_build/
 target/
 
 lambda\.zip
+
+terraform\.tfvars
+
+\.terraform/
