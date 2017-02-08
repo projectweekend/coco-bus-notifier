@@ -32,9 +32,3 @@ def new_bustracker_records(records):
 def lambda_handler(event, context):
     for record in new_bustracker_records(records=event['Records']):
         print(record)
-
-
-# if __name__ == "__main__":
-#     with open('test_event.json') as f:
-#         test_event = json.load(f)
-#     lambda_handler(event=test_event, context=None)
