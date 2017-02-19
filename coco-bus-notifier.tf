@@ -1,5 +1,6 @@
 variable "BUSTRACKER_TABLE_ARN" {}
 variable "BUSTRACKER_TABLE_STREAM_ARN" {}
+variable "BRIAN_SMS_NUMBER" {}
 
 
 provider "aws" {
@@ -55,6 +56,15 @@ data "aws_iam_policy_document" "coco_lambda_iam_policy" {
     statement {
         effect = "Allow"
         actions = [
+            "sns:Publish"
+        ]
+        resources = [
+            "*"
+        ]
+    }
+    statement {
+        effect = "Allow"
+        actions = [
             "logs:CreateLogGroup",
             "logs:CreateLogStream",
             "logs:PutLogEvents"
@@ -95,6 +105,7 @@ resource "aws_lambda_function" "coco_busnotifier_lambda_17772" {
     environment {
         variables = {
             TIME_TO_STOP = "240"
+            SMS_NUMBER = "${var.BRIAN_SMS_NUMBER}"
         }
     }
 }

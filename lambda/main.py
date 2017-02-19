@@ -1,12 +1,18 @@
 from decimal import Decimal
 import json
 import os
+import boto3
 
 
 INSERT_EVENT = 'INSERT'
 DECIMAL_VALUE_TYPE = 'N'
 STRING_VALUE_TYPE = 'S'
-TIME_TO_STOP = Decimal(os.getenv('TIME_TO_STOP', '0'))
+TIME_TO_STOP = Decimal(os.getenv('TIME_TO_STOP', '300'))
+SMS_NUMBER = os.getenv('SMS_NUMBER')
+assert SMS_NUMBER
+
+
+SNS = boto3.client('sns')
 
 
 def parse_field_value(value_dict):
@@ -32,11 +38,17 @@ def new_bustracker_records(records):
 
 
 def lambda_handler(event, context):
-    message = '{0}: Leave in {1} {2} for a {3} bus'
+    output = []
+    message = '{0}: Leave in {1} {2} for the {3}'
     for i, record in enumerate(new_bustracker_records(records=event['Records'])):
         time_until_leave = record['time_until_arrival'] - TIME_TO_STOP
         time_until_leave = int(time_until_leave / 60)
         if time_until_leave > 0:
             args = [i, time_until_leave, 'minutes', record['route_id']]
             args[2] = args[2][:-1] if time_until_leave == 1 else args[2]
-            print(message.format(*args))
+            output.append(message.format(*args))
+    sms_pub_kwargs = {
+        'PhoneNumber': SMS_NUMBER,
+        'Message': '\n'.join(output)
+    }
+    SNS.publish(**sms_pub_kwargs)
