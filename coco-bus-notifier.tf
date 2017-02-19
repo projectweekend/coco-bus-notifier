@@ -1,6 +1,12 @@
 variable "BUSTRACKER_TABLE_ARN" {}
+variable "BUSTRACKER_TABLE_ARN" {}
 variable "BUSTRACKER_TABLE_STREAM_ARN" {}
 variable "BRIAN_SMS_NUMBER" {}
+variable "TIME_ZONE" {}
+variable "START_HR" {}
+variable "START_MIN" {}
+variable "END_HR" {}
+variable "END_MIN" {}
 
 
 provider "aws" {
@@ -106,6 +112,11 @@ resource "aws_lambda_function" "coco_busnotifier_lambda_17772" {
         variables = {
             TIME_TO_STOP = "240"
             SMS_NUMBER = "${var.BRIAN_SMS_NUMBER}"
+            TIME_ZONE = "${var.TIME_ZONE}"
+            START_HR = "${var.START_HR}"
+            START_MIN = "${var.START_MIN}"
+            END_HR = "${var.END_HR}"
+            END_MIN = "${var.END_MIN}"
         }
     }
 }
