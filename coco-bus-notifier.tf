@@ -92,6 +92,11 @@ resource "aws_lambda_function" "coco_busnotifier_lambda_17772" {
     runtime = "python2.7"
     timeout = 10
     source_code_hash = "${base64sha256(file("lambda.zip"))}"
+    environment {
+        variables = {
+            TIME_TO_STOP = "240"
+        }
+    }
 }
 
 

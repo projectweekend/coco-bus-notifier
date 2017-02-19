@@ -37,6 +37,6 @@ def lambda_handler(event, context):
         time_until_leave = record['time_until_arrival'] - TIME_TO_STOP
         time_until_leave = int(time_until_leave / 60)
         if time_until_leave > 0:
-            args = [i, minutes, 'minutes', record['route_id']]
+            args = [i, time_until_leave, 'minutes', record['route_id']]
             args[2] = args[2][:-1] if time_until_leave == 1 else args[2]
             print(message.format(*args))
