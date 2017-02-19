@@ -1,5 +1,4 @@
 variable "BUSTRACKER_TABLE_ARN" {}
-variable "BUSTRACKER_TABLE_ARN" {}
 variable "BUSTRACKER_TABLE_STREAM_ARN" {}
 variable "BRIAN_SMS_NUMBER" {}
 variable "TIME_ZONE" {}
