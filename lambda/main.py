@@ -39,16 +39,20 @@ def new_bustracker_records(records):
 
 def lambda_handler(event, context):
     output = []
-    message = '{0}: Leave in {1} {2} for the {3}'
-    for i, record in enumerate(new_bustracker_records(records=event['Records'])):
+    for record in new_bustracker_records(records=event['Records']):
         time_until_leave = record['time_until_arrival'] - TIME_TO_STOP
         time_until_leave = int(time_until_leave / 60)
         if time_until_leave > 0:
-            args = [i, time_until_leave, 'minutes', record['route_id']]
-            args[2] = args[2][:-1] if time_until_leave == 1 else args[2]
-            output.append(message.format(*args))
-    sms_pub_kwargs = {
-        'PhoneNumber': SMS_NUMBER,
-        'Message': '\n'.join(output)
-    }
-    SNS.publish(**sms_pub_kwargs)
+            args = [
+                time_until_leave,
+                'minutes',
+                record['route_id'],
+                record['vehicle_id']
+            ]
+            args[1] = args[1][:-1] if time_until_leave == 1 else args[1]
+            output.append('Leave in {0} {1} for the {2} ({3})'.format(*args))
+    if output:
+        SNS.publish(**{
+            'PhoneNumber': SMS_NUMBER,
+            'Message': output[0]
+        })
